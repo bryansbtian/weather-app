@@ -236,7 +236,7 @@ function getCityCoordinates() {
   if (!cityName) return;
 
   if (/^\d{5}$/.test(cityName)) {
-    let GEOCODING_API_URL = `http://api.openweathermap.org/geo/1.0/zip?zip=${cityName}&appid=${api_key}`;
+    let GEOCODING_API_URL = `https://api.openweathermap.org/geo/1.0/zip?zip=${cityName}&appid=${api_key}`;
     fetch(GEOCODING_API_URL)
       .then((res) => res.json())
       .then((data) => {
@@ -247,7 +247,7 @@ function getCityCoordinates() {
         alert(`Failed to fetch coordinates for zip code ${cityName}`);
       });
   } else {
-    let GEOCODING_API_URL = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${api_key}`;
+    let GEOCODING_API_URL = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${api_key}`;
     fetch(GEOCODING_API_URL)
       .then((res) => res.json())
       .then((data) => {
