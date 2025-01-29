@@ -1,5 +1,6 @@
 let cityInput = document.getElementById("city_input"),
   searchBtn = document.getElementById("searchBtn"),
+  saveBtn = document.getElementById("saveBtn"),
   locationBtn = document.getElementById("locationBtn"),
   api_key = "581d095ed5cf0f0591d592514eeb27cb",
   currentWeatherCard = document.querySelectorAll(".weather-left .card")[0],
@@ -286,7 +287,143 @@ function getUserCoordinates() {
   );
 }
 
+async function saveWeatherData() {
+  let cityName = cityInput.value.trim();
+  let startDate = document.getElementById("start_date").value;
+  let endDate = document.getElementById("end_date").value;
+
+  if (!cityName || !startDate || !endDate) {
+    alert("Please enter all required fields.");
+    return;
+  }
+
+  let data = { location: cityName, startDate, endDate };
+
+  try {
+    const response = await fetch("http://localhost:5000/api/weather", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+      alert("Weather data saved successfully!");
+    } else {
+      alert(`Error: ${result.error}`);
+    }
+  } catch (error) {
+    alert("Failed to save weather data.");
+  }
+}
+
+async function fetchWeatherData() {
+  let url = "http://localhost:5000/api/weather";
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    let weatherDisplay = document.getElementById("weatherHistory");
+    weatherDisplay.innerHTML = "<h3>Stored Weather Data</h3>";
+
+    if (data.length === 0) {
+      weatherDisplay.innerHTML += "<p>No weather data found.</p>";
+      return;
+    }
+
+    data.forEach((entry) => {
+      let tempHTML = `<h4>${entry.location}</h4>
+                      <p><strong>Start Date:</strong> ${entry.startDate}</p>
+                      <p><strong>End Date:</strong> ${entry.endDate}</p>
+                      <p><strong>Temperature Data:</strong></p>
+                      <ul>`;
+
+      entry.temperatures.forEach((temp) => {
+        tempHTML += `<li>${temp.date}: ${temp.temperature.toFixed(2)}°C</li>`;
+      });
+
+      tempHTML += `</ul>
+                   <button onclick="updateWeatherData('${entry._id}')">Update</button>
+                   <button onclick="deleteWeatherData('${entry._id}')">Delete</button>
+                   <button onclick="downloadPDF('${entry._id}')">Download PDF</button>
+                   <hr>`;
+
+      weatherDisplay.innerHTML += tempHTML;
+    });
+  } catch (error) {
+    console.error("Failed to fetch weather data", error);
+  }
+}
+
+async function deleteWeatherData(id) {
+  if (!confirm("Are you sure you want to delete this record?")) return;
+
+  try {
+    const response = await fetch(`http://localhost:5000/api/weather/${id}`, {
+      method: "DELETE",
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+      alert("Weather data deleted successfully!");
+      fetchWeatherData(); // Refresh displayed data after deletion
+    } else {
+      alert(`Error: ${result.error}`);
+    }
+  } catch (error) {
+    alert("Failed to delete weather data.");
+    console.error("Error deleting weather data:", error);
+  }
+}
+
+async function updateWeatherData(id) {
+  let newLocation = prompt("Enter new location:");
+  let newStartDate = prompt("Enter new start date (YYYY-MM-DD):");
+  let newEndDate = prompt("Enter new end date (YYYY-MM-DD):");
+
+  if (!newLocation || !newStartDate || !newEndDate) {
+    alert("All fields are required!");
+    return;
+  }
+
+  try {
+    const response = await fetch(`http://localhost:5000/api/weather/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        location: newLocation,
+        startDate: newStartDate,
+        endDate: newEndDate,
+      }),
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+      alert("Weather data updated successfully!");
+      fetchWeatherData(); // Refresh UI after update
+    } else {
+      alert(`Error: ${result.error}`);
+    }
+  } catch (error) {
+    alert("Failed to update weather data.");
+    console.error("Error updating weather data:", error);
+  }
+}
+
+function downloadPDF(id) {
+  window.open(`http://localhost:5000/api/weather/pdf/${id}`);
+}
+
+// Call this function when the page loads
+document.addEventListener("DOMContentLoaded", () => fetchWeatherData());
+
+document.addEventListener("DOMContentLoaded", fetchWeatherData);
+
 searchBtn.addEventListener("click", getCityCoordinates);
+saveBtn.addEventListener("click", saveWeatherData);
 locationBtn.addEventListener("click", getUserCoordinates);
 cityInput.addEventListener(
   "keyup",
