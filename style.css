@@ -226,6 +226,89 @@ hr {
 #saveBtn:hover {
   background-color: #357abd;
 }
+/* Developer Info */
+.header-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.developer-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.developer-name {
+  font-size: 1rem;
+  color: #888;
+}
+
+.info-button {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 5px;
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: var(--bg-color2);
+  margin: 15% auto;
+  padding: 25px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 500px;
+  position: relative;
+}
+
+.close {
+  color: #aaa;
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: #fff;
+}
+
+.pm-link {
+  color: var(--aqi-1);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.pm-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .modal-content {
+    margin: 25% auto;
+    padding: 15px;
+  }
+}
 
 /* Add this media query to adjust mobile layout */
 @media (max-width: 660px) {

@@ -14,6 +14,27 @@ let cityInput = document.getElementById("city_input"),
   feelsVal = document.getElementById("feelsVal"),
   hourlyForecastCard = document.querySelector(".hourly-forecast"),
   aqiList = ["Good", "Fair", "Moderate", "Poor", "Very Poor"];
+// Get modal elements
+const modal = document.getElementById("pmModal");
+const infoBtn = document.getElementById("infoBtn");
+const span = document.getElementsByClassName("close")[0];
+
+// Show modal when info button is clicked
+infoBtn.onclick = function () {
+  modal.style.display = "block";
+};
+
+// Close modal when X is clicked
+span.onclick = function () {
+  modal.style.display = "none";
+};
+
+// Close modal when clicking outside
+window.onclick = function (event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+};
 
 function getWeatherDetails(name, lat, lon, country, state) {
   let FORECAST_API_URL = `https://api.openweathermap.org/data/2.5/forecast/?lat=${lat}&lon=${lon}&appid=${api_key}`,
