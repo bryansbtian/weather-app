@@ -34,7 +34,7 @@ A responsive web application that provides real-time weather forecasts, historic
 ### Local Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/weather-app.git
+   git clone https://github.com/bryansbtian/weather-app.git
    cd weather-app
 
 2. Install dependencies:
